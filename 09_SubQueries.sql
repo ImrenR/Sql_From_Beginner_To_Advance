@@ -1,3 +1,4 @@
+
 /*============================= SUBQUERIES ====================================
  SORGU içinde çalişan SORGUYA SUBQUERY (ALT SORGU) denilir.
 ================================================================================*/
@@ -54,16 +55,24 @@ where isyeri in(select marka_isim from markalar where marka_id > 101);
 select marka_id,calisan_sayisi from markalar
 where marka_isim in(select isyeri from calisanlar where sehir= 'Ankara');
 
+/* ===================== AGGREGATE METOT KULLANIMI ===========================
+	   Aggregate Metotlari (SUM,COUNT, MIN, MAX, AVG) Subquery içinde kullanilabilir.
+	   Ancak, Sorgu tek bir değer döndürüyor olmalidir.
+	   SYNTAX: sum() şeklinde olmalı sum ile () arasında boşluk olmamalı
+	==============================================================================*/
 -- task04-> Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin toplam maaşini listeleyen query create ediniz...
 
+select marka_isim,calisan_sayisi, (select sum(maas) from calisanlar where marka_isim=isyeri) as maas_toplam from markalar;
 
 
 -- task05-> Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin ortalama maaşini listeleyen query create ediniz...
 
+select marka_isim,calisan_sayisi, (select avg(maas) from calisanlar where marka_isim=isyeri) as maas_avrge from markalar;
 
 
 -- task06-> Her markanin ismini, calisan sayisini ve o markaya ait calisanlarin maksimum ve minumum maaşini listeleyen query create ediniz...
 
-
-
--- task07-> Her markanin id’sini, ismini ve toplam kaç şehirde bulunduğunu listeleyen query create ediniz...
+select marka_isim,calisan_sayisi,
+ (select min(maas) from calisanlar where marka_isim=isyeri) as min_maas, 
+(select max(maas) from calisanlar where marka_isim=isyeri) as max_maas 
+from markalar;
