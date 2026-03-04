@@ -1,166 +1,168 @@
- 
- /******************************************************
-              SELECT - WHERE FILTRELEME
+/******************************************************
+              SELECT - WHERE FILTERING
  ******************************************************/
- 
-use JavaCAN;
-create table ogrenciler(
-id int, isim varchar(45),
-adres varchar(100),
-sinav_notu int
+
+USE JavaCAN;
+
+CREATE TABLE ogrenciler(
+    id INT,
+    isim VARCHAR(45),
+    adres VARCHAR(100),
+    sinav_notu INT
 );
 
-insert into ogrenciler values(101,'Celine','Ankara',99);
-insert into ogrenciler values(102,'Murat','BUrsa',88);
-insert into ogrenciler values(103,'NUr','Istanbul',77);
-insert into ogrenciler values(104,'Abdi','KÖtaya',43);
-insert into ogrenciler values(105,'Mustafa','Gayseri',38);
-insert into ogrenciler values(107,'Haluk','Denizli',10);
-insert into ogrenciler values(107,'Aydin','MARAŞ',61);
-select * from ogrenciler;
+INSERT INTO ogrenciler VALUES(101,'Celine','Ankara',99);
+INSERT INTO ogrenciler VALUES(102,'Murat','Bursa',88);
+INSERT INTO ogrenciler VALUES(103,'Nur','Istanbul',77);
+INSERT INTO ogrenciler VALUES(104,'Abdi','Kütahya',43);
+INSERT INTO ogrenciler VALUES(105,'Mustafa','Kayseri',38);
+INSERT INTO ogrenciler VALUES(107,'Haluk','Denizli',10);
+INSERT INTO ogrenciler VALUES(107,'Aydin','Maraş',61);
+
+SELECT * FROM ogrenciler;
 
 /*
-Verileri SELECT komutu ile veritabanından çekerken filtreleme yapmak için
-SELECT ile birlikte WHERE komutu kullanılır.
-Syntax -> SELECT sutun1, sutun2 ....FROM tablo adı WHERE koşul ;
+While retrieving data using SELECT statement,
+WHERE clause is used for filtering records.
+
+Syntax:
+SELECT column1, column2 ... 
+FROM table_name 
+WHERE condition;
 */
 
--- Task01 -> Sınav notu 80'den büyük olan öğrencilerin bilgileri (hepsi * ile secilir)
--- listeleyen(SELECT - READ e karsilik gelir KULLAN) query create ediniz.
+-- Task01 -> List students whose exam score is greater than 80.
 
-select * from OGrenciler where sinav_notu>80; -- Celine Murat execute edildi
+SELECT * FROM ogrenciler WHERE sinav_notu > 80;
 
---  Task02 -> Adresi(SART SUTUNU) Ankara olan öğrencilerin isim ve adres bilgilerini listeleyen query create ediniz.
+/*
+Task02 -> List name and address of students whose address is Ankara.
+*/
 
-select * from OGrenciler where adres='ankara'; -- celiene
+SELECT * FROM ogrenciler WHERE adres = 'Ankara';
 
--- Task03 -> id'si 104 olan öğrencilerin tüm bilgilerini listeleyen query create ediniz.
+/*
+Task03 -> List all information of students whose id is 104.
+*/
 
-select * from Ogrenciler where id=104; -- abdi
+SELECT * FROM ogrenciler WHERE id = 104;
 
 /*********************************
              SELECT - BETWEEN
 **********************************/
-create table personel
+
+CREATE TABLE personel
 (
-id char(4),
-isim varchar(50),
-maas int
+    id CHAR(4),
+    isim VARCHAR(50),
+    maas INT
 );
 
+INSERT INTO personel VALUES('1001', 'Haluk Bilgin', 70000);
+INSERT INTO personel VALUES('1002', 'Java Han', 85000);
+INSERT INTO personel VALUES('1003', 'Java Han', 65000);
+INSERT INTO personel VALUES('1004', 'Java Tar', 95000);
+INSERT INTO personel VALUES('1005', 'Javva Nur', 80000);
+INSERT INTO personel VALUES('1006', 'Java Naz', 100000);
+INSERT INTO personel VALUES('1006', 'Java Su', 333000);
+INSERT INTO personel VALUES('1006', 'Java Can', 222000);
 
-insert into personel values('1001', 'Haluk Bilgin', 70000);
-insert into personel values('1002', 'Java Han', 85000);
-insert into personel values('1003', 'Java Han', 65000);
-insert into personel values('1004', 'Java Tar', 95000);
-insert into personel values('1005', 'Javva Nur', 80000);
-insert into personel values('1006', 'Java Naz', 100000);
-insert into personel values('1006', 'Java Su', 333000);
-insert into personel values('1006', 'Java Can', 222000);
- select * from personel;
+SELECT * FROM personel;
 
--- BETWEEN 2 mantıksal ifade ile  belirtilen   veriler arasındaki dataları  listeler
--- ahan da TRICK -> BETWEEN de; belirttigini sınır degerleri de, listelemeye dahildir.
+/*
+BETWEEN is used to filter data between two logical values.
+Important trick → BETWEEN includes boundary values.
+*/
 
- 
 /*********************************
              AND - OR
 **********************************/
+
 /*
-AND (ve): Belirtilen şartların her ikiside gerçekleşiyorsa o kayıt listelenir.
-En az bir tanesi gerçekleşmez ise listelemez.kaynana gibi kötümser
- 
-SELECT * FROM matematik sinav1 > 50 AND sinav2 > 50
-Hem sinav1 hemde sinav2 alanı, 50'de büyük olan kayıtları listeler.
- 
-OR (veya): Belirtilen şartlardan en az biri gerçekleşirse, kayıt listelenir. ANA gibi iyimser
- 
-SELECT * FROM matematik wehee sinav1 > 50 OR sinav2 > 50
-Hem sinav1 veya sinav2 alanı, 50'de büyük olan kayıtları listeler.
+AND operator:
+Both conditions must be true to list the record.
+
+OR operator:
+At least one condition must be true to list the record.
 */
 
+-- Task04 -> List personnel whose id is between 1002 and 1005.
 
--- Task04 -> id'si 1002 ile 1005 arasında olan personel bilgilerini listeleyen query create ediniz.
-select * from personel where id between '1002' and '1005';
+SELECT * FROM personel WHERE id BETWEEN '1002' AND '1005';
 
--- Task05 -> Java Tar ile Java Nur arasındaki personel bilgilerini listeleyen query create ediniz..
+-- Task05 -> List personnel whose name is between 'Java Tar' and 'Java Nur'.
 
-select * from personel where isim between 'Java Tar' and 'Java Nur'; -- naturel order
+SELECT * FROM personel WHERE isim BETWEEN 'Java Tar' AND 'Java Nur';
 
--- Task06 -> Maaşı 70000 veya ismi Java Naz olan personeli listeleyen query create ediniz.
+-- Task06 -> List personnel whose salary is 70000 OR name is Java Naz.
 
-select * from personel where maas=70000 or isim='Java Naz';
+SELECT * FROM personel WHERE maas = 70000 OR isim = 'Java Naz';
 
 /*********************************
                       IN
 **********************************/
+
 /*
-IN: Birden fazla mantıksal ifade ile tanımlabilen durumları tek komutla
-sorgu yazabilme imkanı verir.
- 
- 
-Syntax->  SELECT sutun1, sutun2 ....
- FROM tablo_adı
- WHERE sutun_adı IN (deger1, deger2)
+IN operator allows multiple OR conditions to be written in a simpler way.
+
+Syntax:
+SELECT column1, column2 ...
+FROM table_name
+WHERE column_name IN (value1, value2);
 */
 
+-- Task07 -> List personnel whose id is 1001, 1002, and 1004.
 
--- Task07 -> id'si 1001,1002 ve 1004 olan prsonel bilgilerini listeleyen query create ediniz.
+SELECT * FROM personel WHERE id IN('1001','1002','1004');
 
-select * from personel where id IN('1001','1002','1004');
--- Task08 -> Maaşı sadece 70000 veya 100000 olan personeli listeleyen query create ediniz.
+-- Task08 -> List personnel whose salary is 70000 or 100000.
 
- select * from personel where maas IN(100000,70000);
+SELECT * FROM personel WHERE maas IN(100000,70000);
 
--- Task08.5 -> Maaşı sadece 70000 veya ismi javva Nur olan personeli listeleyen query create ediniz. -> in ?
+-- Task08.5 -> List personnel whose salary is 70000 OR name is Javva Nur.
 
- select * from personel where maas=70000 or isim='Javva Nur';
--- farkli column -field icin where filtrelemede in yerine or kullanilir.
-
-
+SELECT * FROM personel WHERE maas = 70000 OR isim = 'Javva Nur';
 
 /*********************************
               SELECT - LIKE
-**********************************/ 
+**********************************/
 
 /*
-SELECT - LIKE
-LIKE: Sorgulama yaparken belirli patternleri kullanabilmesini  sağlar
+LIKE operator is used for pattern matching.
 
-Syntax –> SELECT sutun1, sutun2, ...FROM tablo_adı WHERE sutunName LIKE pattern
-
-PATTERN İÇİN
-% -> 0 veya daha fazla karakteri belirtir.
-_ -> Tek bir karakteri belirtir.  _ : karakter sayısı kadar kullanılır.
+Patterns:
+% -> Represents zero or more characters.
+_ -> Represents a single character.
 */
 
--- Task09 -> İsmi J harfi ile başlayan personeli listeleyen query create ediniz.
+-- Task09 -> List personnel whose name starts with J.
 
-select * from personel where isim like 'j%'; -- isim sutunundaki ilk karakter j olup sonrasinda sarti olmayan record filtreleme
+SELECT * FROM personel WHERE isim LIKE 'J%';
 
--- Task09.5 -> İsmi J harfi ile başlayan 8 harfli personeli listeleyen query create ediniz.
+-- Task09.5 -> List personnel whose name starts with J and is 8 characters long.
 
-select * from personel where isim like 'j_______'; -- isim sutunundaki ilk karakter j olup sonrasi 7 character record filtreleme
+SELECT * FROM personel WHERE isim LIKE 'J_______';
 
--- Task10 -> İsmi N harfi ile biten personeli listeleyen query create ediniz.
+-- Task10 -> List personnel whose name ends with N.
 
-select * from personel where isim like '%N';
--- Task11 -> İsmi 3. harfi l olan personeli listeleyen query create ediniz.
+SELECT * FROM personel WHERE isim LIKE '%N';
 
-select * from personel where isim like '__L%';
+-- Task11 -> List personnel whose 3rd character is L.
 
--- Task12 -> İsminin 2. harfi a olup diğer harflerinde c olan personel listeleyen query create ediniz.
+SELECT * FROM personel WHERE isim LIKE '__L%';
 
-select * from personel where isim like '_a%c%'; --  java can
+-- Task12 -> List personnel whose 2nd character is A and contains C in other positions.
 
--- Task13 -> İsminde A harfi olmayan personeli listeleyen query create ediniz.
+SELECT * FROM personel WHERE isim LIKE '_A%C%';
 
-select * from personel where isim not like '%a%';
+-- Task13 -> List personnel whose name does NOT contain A.
 
--- Task14 -> Maaşı 6 haneli olan personeli listeleyen query create ediniz.
+SELECT * FROM personel WHERE isim NOT LIKE '%A%';
 
-select * from personel where maas like '______';
+-- Task14 -> List personnel whose salary has 6 digits.
 
--- Task15-> isim 1. harfi j ve 7. harfi A olan personeli listeleyen query create ediniz.
+SELECT * FROM personel WHERE maas LIKE '______';
 
-select * from personel where isim like 'j_____a%';
+-- Task15 -> List personnel whose name starts with J and 7th character is A.
+
+SELECT * FROM personel WHERE isim LIKE 'J_____A%';

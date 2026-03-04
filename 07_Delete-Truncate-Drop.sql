@@ -1,24 +1,30 @@
 /* ======================== DELETE - TRUNCATE - DROP ============================   
-   1-) TRUNCATE komutu DELETE komutu gibi bir tablodaki verilerin tamamını siler.
-       Ancak, seçmeli silme yapilamaz. TRUNCATE TABLE where ...... OLMAZ
-    
-   2-) DELETE komutu beraberinde WHERE keyword kullanılabilir ama TRUNCATE ile kullanılmaz.
-       Delete komutu ile silinen veriler ROLLBACK Komutu ile kolaylıkla geri getirilebilir.
-  
-   3-) TRUNCATE komutu tablo yapısını değiştirmeden, tablo içinde yer alan tüm verileri tek komutla silmenizi sağlar.
-       TRUNCATE ile silinen veriler geri alınması daha zordur. Ancak Transaction yöntemi ile geri alınması mümkün olabilir.
-    
-   4-) DROP komutu da bir DDL komutudur. Ancak DROP veriler ile tabloyu da siler ROLLBACK çalişmaz. 
+
+1-) **TRUNCATE** deletes all records from a table like DELETE without WHERE clause.
+    - Conditional deletion is not allowed.
+
+2-) **DELETE** can be used with WHERE clause for selective deletion.
+    - Data deleted with DELETE can be restored using ROLLBACK if transaction control is supported.
+
+3-) **TRUNCATE** removes all records but keeps table structure.
+    - Data recovery after TRUNCATE is difficult but may be possible depending on transaction settings.
+
+4-) **DROP** is a DDL command.
+    - DROP deletes both table structure and data.
+    - ROLLBACK usually does not work after DROP.
+
 ===================================================================================*/
-use JavaCan;
+
+USE JavaCan;
+
 CREATE TABLE ogrenciler
 (
-id CHAR(3),
-isim VARCHAR(50),
-veli_isim VARCHAR(50),
-yazili_notu int       
+    id CHAR(3),
+    isim VARCHAR(50),
+    veli_isim VARCHAR(50),
+    yazili_notu INT       
 );
-  
+
 INSERT INTO ogrenciler VALUES(101, 'Haluk Bilgin', 'JavaCan',75);
 INSERT INTO ogrenciler VALUES(102, 'Ipek Bilir', 'JavaNaz',85);
 INSERT INTO ogrenciler VALUES(103, 'Harun Bil', 'JavaSu',85);
@@ -27,16 +33,31 @@ INSERT INTO ogrenciler VALUES(105, 'Halime Bilse', 'JavvaNur',83);
 INSERT INTO ogrenciler VALUES(106, 'Haline Bak', 'JavaLar',99);
 INSERT INTO ogrenciler VALUES(107, 'Hanimiş Bee', 'JavaHan',91);
 
-select * from ogrenciler;
+SELECT * FROM ogrenciler;
+
+/* ---------------- Transaction Control ---------------- */
+
 START TRANSACTION;
-savepoint geri_getir; -- tablodaki record u geri_getir kayit noktasina yedeklendi her insertten sonra record savepoint yedeklenmeli
+
+SAVEPOINT geri_getir;
+-- Data is backed up at this savepoint for recovery.
+
 INSERT INTO ogrenciler VALUES(108, 'Imren Bak', 'JavaLar',100);
 INSERT INTO ogrenciler VALUES(109, 'Erdem Bee', 'JavaHan',101);
--- savepoint comutuyla tablodaki yanlislikla silinmeyle karsi korumaya alinir.
--- savepoiny sorunu icin sql editor -> sql execution-> auto committeki tiki kaldir..
--- ve bi tik tikliysa delete islemide olmaz 1046 hatasi verir
-delete from ogrenciler;
-rollback to geri_getir;
 
-drop table ogrenciler; -- butun tabloyu siler rollback le geri getiremezsin delete ile arasindaki fark budur
-truncate table ogrenciler; --  tikladik, save point dedik, ogrencileri select ettik truncate calismadi liste hala bos
+-- Protects data from accidental deletion using savepoints.
+
+DELETE FROM ogrenciler;
+
+ROLLBACK TO geri_getir;
+-- Restores data to the savepoint.
+
+-- Note:
+-- If auto-commit is enabled in SQL editor settings, transaction rollback may not work.
+
+DROP TABLE ogrenciler;
+-- Drops the entire table structure and data; rollback is not possible.
+
+TRUNCATE TABLE ogrenciler;
+-- Removes all records but keeps table structure.
+-- Usually faster than DELETE.

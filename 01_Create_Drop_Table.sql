@@ -1,50 +1,54 @@
-create database if not exists JavaCan; -- Db ilk kez create edilirken dublicate onune gecmek icin if not exist kullanilir
-create database JavaCan; -- yeni bir haluk database create edildi
-use JavaCan; -- mevcut db den haluk db ye gecis yapildi.
-use imren;
+CREATE DATABASE IF NOT EXISTS JavaCan; 
+-- Using IF NOT EXISTS prevents duplicate database creation errors when creating a database for the first time.
 
--- single comment --> tek satir yorum
+CREATE DATABASE JavaCan; 
+-- Creates a new database named JavaCan (if it does not already exist).
 
-/* multpy line comment 
- */
- 
- 
- create table students(
- id varchar(4),
- name varchar(50),
- grade int,
- age int
- ); -- column sutun field basliklariin data type girisi yapildi.
- 
- /******************************************************
-              VERI (DATA-RECORD) GIRIS
- ******************************************************/
-insert into students values('1001','haluk',77,23);
-insert into students values('1002','tulin',88,15);
-insert into students values('1003','erdem',95,11);
-insert into students values('1002','mehmet',63,21);
+USE JavaCan; 
+-- Switches to the existing database JavaCan.
 
+USE imren;
+-- Switches to database imren (if it exists).
 
- /******************************************************
-             TABLODAN (DATA-RECORD) SORGULAMA
- ******************************************************/
- 
- select * from students; -- student tabledaki tum record execute edildi.
- 
-  /******************************************************
-            PARCALI (DATA-RECORD) GIRISI
- ******************************************************/
- 
- insert into students(id,age)values('99',50);
-  select * from students; -- student tabledaki tum record execute edildi.
+-- Single-line comment
 
-   /******************************************************
-            DB den TABLE SILME
- ******************************************************/
- 
- drop table students; -- db den students table silinir
- 
- 
- 
- 
- 
+/* Multi-line comment */
+
+CREATE TABLE students(
+    id VARCHAR(4),
+    name VARCHAR(50),
+    grade INT,
+    age INT
+); 
+-- Column definitions with data types.
+
+/******************************************************
+                    DATA INSERTION
+******************************************************/
+
+INSERT INTO students VALUES('1001','haluk',77,23);
+INSERT INTO students VALUES('1002','tulin',88,15);
+INSERT INTO students VALUES('1003','erdem',95,11);
+INSERT INTO students VALUES('1002','mehmet',63,21);
+
+/******************************************************
+                    DATA QUERYING
+******************************************************/
+
+SELECT * FROM students;
+-- Retrieves all records from students table.
+
+/******************************************************
+                PARTIAL DATA INSERTION
+******************************************************/
+
+INSERT INTO students(id,age) VALUES('99',50);
+
+SELECT * FROM students;
+
+/******************************************************
+                DROP TABLE
+******************************************************/
+
+DROP TABLE students;
+-- Deletes students table from database.
