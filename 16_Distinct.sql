@@ -7,7 +7,7 @@
     SELECT DISTINCT sutun_adi1, sutun_adi2, sutun_adi3
     FROM  tablo_adı;
 ==============================================================================*/
-      
+      use JavaCan;
     CREATE TABLE javaManav 
     (
         isim varchar(50), 
@@ -33,18 +33,28 @@
 task01-> satılan kaç farklı meyve türu oldugunu listeleyen query create ediniz...
 -----------------------------------------------------------------------------*/  
 
-
+select count(distinct urun_adi) as urun_turu_adedi
+from javanamav;
 /* -----------------------------------------------------------------------------
     -- task02-> farkli  kisilerin sattiği farklı urunleri  listeleyen query create ediniz...
 ------------------------------------------------------------------------------*/
-
+select distinct isim, urun_adi
+from javamanav
+where urun_adi is not null;
 
 
 -- task02.5 ->   farklı urunleri satan farkli kisileri listeleyen query create ediniz...
-      
+
+      select distinct urun_adi,isim
+from javamanav
+where urun_adi is not null;
       
       
   /* ----------------------------------------------------------------------------
   task03->  satılan meyvelerin urun_miktarlarinin benzersiz  olanlarının  toplamlarini listeleyen query create ediniz...
 -----------------------------------------------------------------------------*/  
-    
+          select urun_adi,sum(distinct urun_miktari) as toplam_urun_miktari
+from javamanav
+group by urun_adi;
+
+      
