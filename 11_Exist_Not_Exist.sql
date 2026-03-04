@@ -1,95 +1,123 @@
-/*=========================== EXISTS, NOT EXIST ================================
-   EXISTS Condition subquery’ler (altsorgu) ile kullanilir. IN ifadesinin kullanımına benzer olarak,
-   EXISTS ve NOT EXISTS ifadeleri de alt sorgudan getirilen değerlerin içerisinde 
-   bir değerin olması veya olmaması durumunda işlem yapılmasını sağlar. 
-   
-   EXISTS operatorü bir Boolean operatördür ve true - false değer döndürür. 
-   EXISTS operatorü sıklıkla Subquery'lerde satırların doğruluğunu test etmek 
-   için kullanılır.
-    
-    Eğer bir subquery bir satırı döndürürse EXISTS operatörü de TRUE 
-    değer döndürür. Aksi takdirde, FALSE değer döndürecektir.
-    
-    Özellikle altsorgularda hızlı kontrol işlemi gerçekleştirmek için kullanılır
-    
-	
-    SYTAX:
-    SELECT kolan_ismi  
-	FROM tablo_ismi  
-	WHERE [NOT] EXISTS (  
-    SELECT kolon_ismi   
-    FROM tablo_ismi   
-    WHERE koşul  
-); 
-==============================================================================*/
-   use JavaCan;
-    CREATE TABLE mayis
-    (
-        urun_id int,
-        musteri_isim varchar(50), 
-        urun_isim varchar(50)
-    );
-    
-    CREATE TABLE haziran 
-    (
-        urun_id int ,
-        musteri_isim varchar(50), 
-        urun_isim varchar(50)
-    );
-    
-  
-    INSERT INTO mayis VALUES (10, 'Haluk', 'javaCAN');
-    INSERT INTO mayis VALUES (20, 'Harun', 'javaTAR');
-    INSERT INTO mayis VALUES (30, 'Ipek', 'javaNAZ');
-    INSERT INTO mayis VALUES (20, 'Hasan', 'javaHAN');
-    INSERT INTO mayis VALUES (10, 'Halime', 'javaSU');
-    INSERT INTO mayis VALUES (40, 'Ebik', 'Gabik');
-    INSERT INTO mayis VALUES (20, 'Merve', 'javvaNUR');
-    
-   
-   INSERT INTO haziran VALUES (10, 'Hasmayan', 'javaCAN');
-    INSERT INTO haziran VALUES (10, 'Kemal', 'javaCAN');
-    INSERT INTO haziran VALUES (20, 'Hesna', 'javaTAR');
-    INSERT INTO haziran VALUES (50, 'Esen', 'javvaNUR');
-    INSERT INTO haziran VALUES (20, 'Esmeyen', 'javaTAR');
-    select * from mayis;
-     select * from haziran;
-   /* -----------------------------------------------------------------------------
-  task01-> mayis ve haziran aylarında aynı URUN_ID ile satılan ürünlerin
-  URUN_ID’lerini listeleyen ve aynı zamanda bu ürünleri mayis ayında alan
-  MUSTERI_ISIM 'lerini listeleyen bir sorgu yazınız. 
- -----------------------------------------------------------------------------*/        
+/*=========================== EXISTS, NOT EXISTS ================================
+   The EXISTS condition is used with subqueries. Similar to the IN operator,
+   EXISTS and NOT EXISTS check whether a value exists or does not exist in
+   the result set returned from a subquery.
 
-select urun_id,musteri_isim from mayis
-where exists (select urun_id from haziran where mayis.urun_id=haziran.urun_id);
+   EXISTS is a Boolean operator and returns TRUE or FALSE.
+
+   EXISTS is commonly used in subqueries to test row existence.
+
+   If a subquery returns at least one row, EXISTS returns TRUE.
+   Otherwise, it returns FALSE.
+
+   It is especially useful for fast existence checks in subqueries.
+
+   SYNTAX:
+   SELECT column_name  
+   FROM table_name  
+   WHERE [NOT] EXISTS (  
+       SELECT column_name   
+       FROM table_name   
+       WHERE condition  
+   ); 
+==============================================================================*/
+
+use JavaCan;
+
+CREATE TABLE mayis
+(
+    urun_id int,
+    musteri_isim varchar(50), 
+    urun_isim varchar(50)
+);
+
+CREATE TABLE haziran 
+(
+    urun_id int ,
+    musteri_isim varchar(50), 
+    urun_isim varchar(50)
+);
+
+/* Insert data into May table */
+INSERT INTO mayis VALUES (10, 'Haluk', 'javaCAN');
+INSERT INTO mayis VALUES (20, 'Harun', 'javaTAR');
+INSERT INTO mayis VALUES (30, 'Ipek', 'javaNAZ');
+INSERT INTO mayis VALUES (20, 'Hasan', 'javaHAN');
+INSERT INTO mayis VALUES (10, 'Halime', 'javaSU');
+INSERT INTO mayis VALUES (40, 'Ebik', 'Gabik');
+INSERT INTO mayis VALUES (20, 'Merve', 'javvaNUR');
+
+/* Insert data into June table */
+INSERT INTO haziran VALUES (10, 'Hasmayan', 'javaCAN');
+INSERT INTO haziran VALUES (10, 'Kemal', 'javaCAN');
+INSERT INTO haziran VALUES (20, 'Hesna', 'javaTAR');
+INSERT INTO haziran VALUES (50, 'Esen', 'javvaNUR');
+INSERT INTO haziran VALUES (20, 'Esmeyen', 'javaTAR');
+
+SELECT * FROM mayis;
+SELECT * FROM haziran;
+
+/* -----------------------------------------------------------------------------
+Task 01 -> Write a query that lists URUN_IDs of products sold in both May and June
+with the same URUN_ID, and also lists the MUSTERI_ISIMs of customers who bought
+these products in May.
+-----------------------------------------------------------------------------*/        
+
+SELECT urun_id, musteri_isim 
+FROM mayis
+WHERE EXISTS (
+    SELECT urun_id 
+    FROM haziran 
+    WHERE mayis.urun_id = haziran.urun_id
+);
 
 /*
-2. solution with in
-select urun_id,musteri_isim from mayis
-where urun_id in (select urun_id from haziran where mayis.urun_id=haziran.urun_id);
+Alternative solution using IN:
 
+SELECT urun_id, musteri_isim 
+FROM mayis
+WHERE urun_id IN (
+    SELECT urun_id 
+    FROM haziran 
+    WHERE mayis.urun_id = haziran.urun_id
+);
 */
+
 /* -----------------------------------------------------------------------------
- task02-> Her iki ayda birden satılan ürünlerin URUN_ISIM'lerini ve
- bu ürünleri haziran ayında satın alan MUSTERI_ISIM'lerini listeleyen bir sorgu yazınız.
- -----------------------------------------------------------------------------*/
- select urun_id,musteri_isim from haziran as h
-where exists (select urun_id from mayis as m where m.urun_id=h.urun_id);
-  /* -----------------------------------------------------------------------------
-  task03-> Her iki ayda ortak satilmayan ürünlerin URUN_ISIM'lerini ve
-  bu ürünleri haziran ayında satın alan MUSTERI_ISIM'lerini listeleyen bir sorgu yazınız. 
- -----------------------------------------------------------------------------*/ 
- select urun_id,musteri_isim from haziran as h
-where not exists (select urun_id from mayis as m where m.urun_id=h.urun_id);
+Task 02 -> Write a query that lists URUN_ISIMs of products sold in both months
+and MUSTERI_ISIMs of customers who purchased these products in June.
+-----------------------------------------------------------------------------*/
+
+SELECT urun_id, musteri_isim 
+FROM haziran AS h
+WHERE EXISTS (
+    SELECT urun_id 
+    FROM mayis AS m 
+    WHERE m.urun_id = h.urun_id
+);
+
 /* -----------------------------------------------------------------------------
-  task04-> Her iki ayda ortak satilmayan ürünlerin URUN_ISIM'lerini ve
-  bu ürünleri mayıs ayında satın alan MUSTERI_ISIM'lerini listeleyen bir sorgu yazınız. 
- -----------------------------------------------------------------------------*/ 
+Task 03 -> Write a query that lists products that were NOT commonly sold in both months,
+including URUN_ISIMs and MUSTERI_ISIMs of customers who purchased these products in June.
+-----------------------------------------------------------------------------*/ 
 
- select urun_id,musteri_isim from mayis as m
-where not exists (select urun_id from haziran as h where m.urun_id=h.urun_id);
+SELECT urun_id, musteri_isim 
+FROM haziran AS h
+WHERE NOT EXISTS (
+    SELECT urun_id 
+    FROM mayis AS m 
+    WHERE m.urun_id = h.urun_id
+);
 
+/* -----------------------------------------------------------------------------
+Task 04 -> Write a query that lists products that were NOT commonly sold in both months,
+including URUN_ISIMs and MUSTERI_ISIMs of customers who purchased these products in May.
+-----------------------------------------------------------------------------*/ 
 
-
-
-
+SELECT urun_id, musteri_isim 
+FROM mayis AS m
+WHERE NOT EXISTS (
+    SELECT urun_id 
+    FROM haziran AS h 
+    WHERE m.urun_id = h.urun_id
+);
