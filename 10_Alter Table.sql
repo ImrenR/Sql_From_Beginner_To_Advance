@@ -1,21 +1,28 @@
 /*=============================== ALTER TABLE =========================================
-	   
-	   ALTER TABLE tabloda ADD, CHANGE, MODIFY, veya DROP/DELETE COLUMNS gibi islemleri icin kullanılır.
-	   ALTER TABLE ifadesi tablolari yeniden isimlendirmek (RENAME) icin de kullanılır.
-	          constraint check -> Bir sütuna yerleştirilebilecek değer aralığını sınırlamak için kullanılır .
-	===================================================================================*/
+ALTER TABLE is used to:
 
-use JavaCan;
+- Add columns
+- Modify column definitions
+- Drop columns
+- Rename tables or columns
+- Add constraints such as CHECK
+===================================================================================*/
+
+USE JavaCan;
+
+/* ---------------- Table Creation ---------------- */
+
 CREATE TABLE personel
 (
-           id int PRIMARY KEY,
-           isim VARCHAR(50),
-           sehir VARCHAR(50),
-           maas int,
-           sirket VARCHAR(20)
+    id INT PRIMARY KEY,
+    isim VARCHAR(50),
+    sehir VARCHAR(50),
+    maas INT,
+    sirket VARCHAR(20)
 );
- 
- 
+
+/* ---------------- Data Insertions ---------------- */
+
 INSERT INTO personel VALUES(123456789, 'Haluk Bilgin', 'Istanbul', 50000, 'IBM');
 INSERT INTO personel VALUES(234567890, 'Ipek Bilir', 'Istanbul', 25000, 'Google');
 INSERT INTO personel VALUES(345678901, 'Harun Bilmiş', 'Ankara', 13000, 'IBM');
@@ -23,61 +30,76 @@ INSERT INTO personel VALUES(456789012, 'Harun Bilmiş', 'Izmir', 10000, 'Microso
 INSERT INTO personel VALUES(567890123, 'Harun Bilmiş', 'Ankara', 17000, 'Amazon');
 INSERT INTO personel VALUES(456789013, 'Ipek Bilir', 'Ankara', 15000, 'Microsoft');
 INSERT INTO personel VALUES(123456710, 'Halime Bak', 'Bursa', 25000, 'IBM');
- 
- 
-   
-select * from personel;
 
--- task01-> personel tablosuna ulke_isim adinda ve default degeri 'Turkiye' olan yeni bir sutun ekleyiniz.
+SELECT * FROM personel;
 
-alter table personel
-add ulke_isim varchar(50) default 'Turkiye';
+/* ---------------- TASKS ---------------- */
 
--- task02-> personel tablosuna cinsiyet Varchar(20) ve yas int data type yeni sutunlar ekleyiniz.
+/* Task01:
+Add column ulke_isim with default value 'Turkiye'.
+*/
 
-alter table personel
-add (gender varchar(20), yas int) ;
+ALTER TABLE personel
+ADD ulke_isim VARCHAR(50) DEFAULT 'Turkiye';
 
--- task02.5-> personel tablosuna yas int data type yeni sutunu isim’den sonraya ekleyiniz.
+/* Task02:
+Add gender and yas columns.
+*/
 
-alter table personel
-add age int after isim ;
+ALTER TABLE personel
+ADD gender VARCHAR(20),
+ADD yas INT;
 
--- task02.75-> personel tablosuna fotball_team   data type Varchar(20) default 'mehter takimi' sutununu isimden sonraya  ekleyiniz
+/* Task02.5:
+Add age column after isim column.
+(MySQL supports AFTER keyword.)
+*/
 
-alter table personel
-add football_team varchar(20) default 'takim' after isim ;
+ALTER TABLE personel
+ADD age INT AFTER isim;
 
+/* Task02.75:
+Add football_team column after isim with default value.
+*/
 
--- task03-> personel tablosundan sirket sutununu siliniz.
-alter table personel
-drop column sirket;
+ALTER TABLE personel
+ADD football_team VARCHAR(20) DEFAULT 'takim' AFTER isim;
 
--- task04-> personel tablosundaki ulke_isim sutununun adini ulke_adi olarak degistiriniz.
+/* Task03:
+Drop sirket column.
+*/
 
-alter table personel
-rename column ulke_isim to ulke_adi;
+ALTER TABLE personel
+DROP COLUMN sirket;
 
-select * from personel;
--- task05-> personel tablosunun adini sefil_ameleler olarak degistiriniz.
-alter table personel
-rename to sefil_ameleler;
+/* Task04:
+Rename column ulke_isim → ulke_adi.
+*/
 
-select * from personel;
+ALTER TABLE personel
+RENAME COLUMN ulke_isim TO ulke_adi;
 
--- task06-> sefil_ameleler tablosundaki ulke_adi sutununa NOT NULL kisitlamasi ekleyiniz ve veri tipini VARCHAR(30) olarak değiştiriniz. 
+/* Task05:
+Rename table personel → sefil_ameleler.
+*/
 
-alter table sefil_ameleler
-modify ulke_adi varchar(30) not null;
+ALTER TABLE personel
+RENAME TO sefil_ameleler;
 
-select * from sefil_ameleler;
+/* After table rename, use new table name */
 
--- task07-> sefil_ameleler tablosuna  maas in 10000 den buyuk veya esit  olma kisitlamasi getiriniz.
+/* Task06:
+Add NOT NULL constraint to ulke_adi and change datatype to VARCHAR(30).
+*/
 
-alter table sefil_ameleler
-add constraint check(maas>9000);
+ALTER TABLE sefil_ameleler
+MODIFY ulke_adi VARCHAR(30) NOT NULL;
 
-select * from sefil_ameleler;
+/* Task07:
+Add CHECK constraint maas >= 9000.
+*/
 
+ALTER TABLE sefil_ameleler
+ADD CONSTRAINT chk_maas CHECK (maas >= 9000);
 
-
+SELECT * FROM sefil_ameleler;
