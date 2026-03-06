@@ -13,6 +13,7 @@ age int
             VERI (DATA-RECORD) GIRISI
 **********************************************************/
 
+
 insert into students values(null,'imren', -- students tablosuna veri girisi yapildi
 99,33);
 insert into students values('1001','tulin', -- students tablosuna veri girisi yapildi
